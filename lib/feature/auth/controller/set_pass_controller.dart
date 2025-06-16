@@ -14,74 +14,74 @@ class SetPassController extends GetxController {
   var confirmPasswordController = TextEditingController();
   var email = ''.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Fetch email from arguments
-    email.value = Get.arguments?['email'] ?? '';
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   // Fetch email from arguments
+  //   email.value = Get.arguments?['email'] ?? '';
+  // }
 
-  Future<void> setPassword(BuildContext context) async {
-    final url = Uri.parse('${Urls.baseUrl}/auth/reset-password');
+  // Future<void> setPassword(BuildContext context) async {
+  //   final url = Uri.parse('${Urls.baseUrl}/auth/reset-password');
 
-    try {
-      EasyLoading.show(status: '...');
+  //   try {
+  //     EasyLoading.show(status: '...');
 
-      // Retrieve the token from SharedPreferences using the helper class
-      String? token = await SharedPreferencesHelper.getAccessToken();
+  //     // Retrieve the token from SharedPreferences using the helper class
+  //     String? token = await SharedPreferencesHelper.getAccessToken();
 
-      if (token == null || token.isEmpty) {
-        EasyLoading.showError("Authentication token not found.");
-        return;
-      }
+  //     if (token == null || token.isEmpty) {
+  //       EasyLoading.showError("Authentication token not found.");
+  //       return;
+  //     }
 
-      // Prepare headers with Authorization token
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': token, // Add token to headers
-      };
+  //     // Prepare headers with Authorization token
+  //     final headers = {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': token, // Add token to headers
+  //     };
 
-      // Prepare the request body
-      final requestBody = {
-        "email": email.value,
-        "password": passwordController.text,
-      };
+  //     // Prepare the request body
+  //     final requestBody = {
+  //       "email": email.value,
+  //       "password": passwordController.text,
+  //     };
 
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(requestBody),
-      );
+  //     final response = await http.post(
+  //       url,
+  //       headers: headers,
+  //       body: jsonEncode(requestBody),
+  //     );
 
-      if (kDebugMode) {
-        print("Response: ${response.body}");
-      }
+  //     if (kDebugMode) {
+  //       print("Response: ${response.body}");
+  //     }
 
-      if (response.statusCode == 200) {
-        await SharedPreferencesHelper.clearAllData();
-        Get.offAll(() => LoginScreen());
-        EasyLoading.showSuccess("Password updated successfully.");
-      } else {
-        EasyLoading.showError("An error occurred: ${response.statusCode}");
-      }
-    } catch (e) {
-      showCustomDialog(
-        // ignore: use_build_context_synchronously
-        context: context,
-        icon: Icons.close,
-        iconColor: Colors.red,
-        title: "Error",
-        message: "An error occurred. Please try again.",
-        buttonText: "Ok, Got it!",
-        onButtonPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      if (kDebugMode) {
-        print(e.toString());
-      }
-    } finally {
-      EasyLoading.dismiss();
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       await SharedPreferencesHelper.clearAllData();
+  //       Get.offAll(() => LoginScreen());
+  //       EasyLoading.showSuccess("Password updated successfully.");
+  //     } else {
+  //       EasyLoading.showError("An error occurred: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     showCustomDialog(
+  //       // ignore: use_build_context_synchronously
+  //       context: context,
+  //       icon: Icons.close,
+  //       iconColor: Colors.red,
+  //       title: "Error",
+  //       message: "An error occurred. Please try again.",
+  //       buttonText: "Ok, Got it!",
+  //       onButtonPressed: () {
+  //         Navigator.pop(context);
+  //       },
+  //     );
+  //     if (kDebugMode) {
+  //       print(e.toString());
+  //     }
+  //   } finally {
+  //     EasyLoading.dismiss();
+  //   }
+  // }
 }

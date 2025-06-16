@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:guven_a/bottom_nav_bar_sender/screen/bottom_nav_bar.dart';
 import 'package:guven_a/core/global_widegts/custom_container.dart';
 import 'package:guven_a/core/global_widegts/custom_passwordfield.dart';
 import 'package:guven_a/core/global_widegts/custom_textfield.dart';
-import 'package:guven_a/feature/auth/controller/login_controller.dart';
 import 'package:guven_a/feature/auth/controller/register_controller.dart';
-import 'package:guven_a/feature/auth/screen/forget_pass_email_selection.dart';
-import 'package:guven_a/feature/auth/screen/register_screen.dart';
+import 'package:guven_a/feature/auth/screen/login_screen.dart';
 
 import '../../../core/const/app_colors.dart';
 import '../../../core/const/background_path.dart';
@@ -17,10 +14,10 @@ import '../../../core/global_widegts/app_button.dart';
 import '../../../core/global_widegts/spp_textfield.dart';
 import '../../../core/style/global_text_style.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
 
-  final LoginController controller = Get.put(LoginController());
+  final RegisterController controller = Get.put(RegisterController());
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +38,7 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              'Sign in to your account',
+              'Sign up for free',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
 
@@ -148,33 +145,18 @@ class LoginScreen extends StatelessWidget {
                     "Password empty",
                     "Enter your password",
                     snackPosition: SnackPosition.TOP,
+                    backgroundColor: Colors.redAccent,
                   );
                 } else {
                   controller.emailError.value = false;
                   controller.passError.value = false;
-                  Get.to(() => BottomNavbar());
                 }
               },
-              text: "Sign In",
+              text: "Sign Up",
             ),
 
             Padding(
               padding: EdgeInsets.symmetric(vertical: 30),
-              child: GestureDetector(
-                onTap: () => Get.to(() => ForgetPassEmailSelection()),
-                child: Text(
-                  'Forgot the password?',
-                  style: globalTextStyle(
-                    fontSize: 16,
-                    color: Color(0xFfD536AC),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(bottom: 30),
               child: Text('or continue with', style: TextStyle(fontSize: 16)),
             ),
 
@@ -204,7 +186,7 @@ class LoginScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Don’t have an account?",
+                  "Already have an account?",
                   style: globalTextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w300,
@@ -213,9 +195,9 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 5),
                 GestureDetector(
-                  onTap: () => Get.to(() => RegisterScreen()),
+                  onTap: () => Get.to(() => LoginScreen()),
                   child: Text(
-                    "Sign Up",
+                    "Sign In",
                     style: globalTextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -226,6 +208,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(height: 10),
           ],
         ),
       ),
