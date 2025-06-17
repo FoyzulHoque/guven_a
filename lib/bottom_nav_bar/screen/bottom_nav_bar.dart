@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:guven_a/bottom_nav_bar_sender/controller/bottom_nav_bar_controller.dart';
+import 'package:guven_a/bottom_nav_bar/controller/bottom_nav_bar_controller.dart';
 import 'package:guven_a/core/const/nav_bar_images.dart';
 import 'package:guven_a/feature/home/screen/home_screen.dart';
 import 'package:guven_a/feature/my_request/screen/my_request.dart';
+import 'package:guven_a/feature/my_response/screen/my_response.dart';
+import 'package:guven_a/feature/profile/screen/profile.dart';
+import 'package:guven_a/feature/request/screen/request.dart';
 
 class BottomNavbar extends StatelessWidget {
   BottomNavbar({super.key});
@@ -13,9 +16,9 @@ class BottomNavbar extends StatelessWidget {
   final List<Widget> pages = [
     HomeScreen(),
     MyRequestScreen(),
-    HomeScreen(),
-    HomeScreen(),
-    HomeScreen(),
+    RequestScreen(),
+    MyResponse(),
+    ProfileScreen(),
   ];
 
   @override
@@ -88,7 +91,7 @@ class BottomNavbar extends StatelessWidget {
         final isSelected = controller.currentIndex.value == index;
         return Image.asset(
           isSelected ? activeImage : passiveImage,
-          height: 60, // Special size for index 2
+          height: 50, // Special size for index 2
           fit: BoxFit.cover,
         );
       }),
