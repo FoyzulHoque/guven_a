@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:guven_a/core/style/global_text_style.dart';
+import 'package:guven_a/feature/card_details/screen/card_details.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -47,7 +49,16 @@ class HomeScreen extends StatelessWidget {
                   subtitle:
                       "Photos should be-fallen live, not from the library",
                   imageUrl: "assets/images/home_img1.png",
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(
+                      () => CardDetails(
+                        title: "123 Main St",
+                        subtitle:
+                            "Photos should be-fallen live, not from the library",
+                        imageUrl: "assets/images/home_img1.png",
+                      ),
+                    );
+                  },
                 ),
 
                 CustomCard(
@@ -55,21 +66,48 @@ class HomeScreen extends StatelessWidget {
                   subtitle:
                       "Photos should be-fallen live, not from the library",
                   imageUrl: "assets/images/home_img1.png",
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(
+                      () => CardDetails(
+                        title: "123 Main St",
+                        subtitle:
+                            "Photos should be-fallen live, not from the library",
+                        imageUrl: "assets/images/home_img1.png",
+                      ),
+                    );
+                  },
                 ),
                 CustomCard(
                   title: "123 Main St",
                   subtitle:
                       "Photos should be-fallen live, not from the library",
                   imageUrl: "assets/images/home_img1.png",
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(
+                      () => CardDetails(
+                        title: "123 Main St",
+                        subtitle:
+                            "Photos should be-fallen live, not from the library",
+                        imageUrl: "assets/images/home_img1.png",
+                      ),
+                    );
+                  },
                 ),
                 CustomCard(
                   title: "123 Main St",
                   subtitle:
                       "Photos should be-fallen live, not from the library",
                   imageUrl: "assets/images/home_img1.png",
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(
+                      () => CardDetails(
+                        title: "123 Main St",
+                        subtitle:
+                            "Photos should be-fallen live, not from the library",
+                        imageUrl: "assets/images/home_img1.png",
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

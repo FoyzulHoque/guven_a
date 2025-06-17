@@ -9,15 +9,17 @@ class CustomTextField extends StatelessWidget {
   final Color focusedBorderColor;
   final Color textColor;
   final Color hintColor;
+  final int maxLine;
 
   CustomTextField({
     required this.title,
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.borderColor = Colors.grey,
-    this.focusedBorderColor = Colors.blue,
+    this.focusedBorderColor = const Color(0xFfD536AC),
     this.textColor = Colors.black,
     this.hintColor = Colors.black54,
+    this.maxLine = 1,
   });
 
   @override
@@ -51,6 +53,7 @@ class CustomTextField extends StatelessWidget {
           TextField(
             controller: controller,
             keyboardType: keyboardType,
+            maxLines: maxLine,
             style: TextStyle(color: textColor),
             decoration: InputDecoration(
               hintText: 'Enter $title',

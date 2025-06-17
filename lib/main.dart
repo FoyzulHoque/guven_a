@@ -10,12 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   configEasyLoading();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Get.put(NotificationController());
-  // Get.put(ChatController());
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // String? savedLocale = prefs.getString('locale');
   runApp(MyApp());
 }
 
