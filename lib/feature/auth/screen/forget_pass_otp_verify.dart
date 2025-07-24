@@ -102,7 +102,7 @@ class _ForgetPassOtpVerifyState extends State<ForgetPassOtpVerify> {
 
             // OTP PIN input
             Pinput(
-              length: 6,
+              length: 4,
               controller: controller.otpController,
               defaultPinTheme: PinTheme(
                 width: 50,
@@ -169,18 +169,7 @@ class _ForgetPassOtpVerifyState extends State<ForgetPassOtpVerify> {
             Spacer(),
             AppButton(
               onTap: () {
-                if (controller.otpController.text.isEmpty) {
-                  controller.otpErrorText.value = "Otp filled empty";
-                  controller.otpError.value = true;
-                  Get.snackbar("Otp empty", "Please enter otp code!");
-                } else if (controller.otpController.length < 6) {
-                  controller.otpErrorText.value = "Otp filled incomplete";
-                  controller.otpError.value = true;
-                  Get.snackbar("Incomplete", "Please enter otp code!");
-                } else {
-                  controller.otpError.value = false;
-                  Get.to(() => SetNewPassword());
-                }
+                controller.verifyOtp(context, widget.userEmail);
               },
               text: "Verify",
             ),
@@ -203,12 +192,17 @@ class _ForgetPassOtpVerifyState extends State<ForgetPassOtpVerify> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text(
-                    "Resend Code",
-                    style: globalTextStyle(
-                      fontSize: 14,
-                      color: Color(0xFfD536AC),
-                      fontWeight: FontWeight.w500,
+                  InkWell(
+                    onTap: () {
+                      controller.resendOtp(context, widget.userEmail);
+                    },
+                    child: Text(
+                      "Resend Code",
+                      style: globalTextStyle(
+                        fontSize: 14,
+                        color: Color(0xFfD536AC),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],

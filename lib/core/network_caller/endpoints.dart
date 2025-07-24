@@ -1,5 +1,5 @@
 class Urls {
-  static const String baseUrl = 'https://jessicho-backend.vercel.app/api/v1';
+  static const String baseUrl = 'https://api.guven.code-commando.com/api/v1';
   static const String socketUrl = 'ws://10.0.20.38:5005';
   static const String login = '$baseUrl/auth/login';
   static const String authentication = '$baseUrl/auth/verify-auth';

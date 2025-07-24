@@ -136,31 +136,32 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 15),
               AppButton(
                 onTap: () {
-                  // Check if passwords match
-                  if (controller.emailController.text.isEmpty) {
-                    controller.emailErrorText.value = "Enter your email";
-                    controller.emailError.value = true;
-                    // Show an error message to the user
-                    Get.snackbar(
-                      "Empty",
-                      "Enter your email",
-                      snackPosition: SnackPosition.TOP,
-                    );
-                  } else if (controller.passwordController.text ==
-                      controller.confirmPasswordController.text) {
-                    controller.passErrorText.value = "Enter your password";
-                    controller.emailError.value = false;
-                    controller.passError.value = true;
-                    Get.snackbar(
-                      "Password empty",
-                      "Enter your password",
-                      snackPosition: SnackPosition.TOP,
-                    );
-                  } else {
-                    controller.emailError.value = false;
-                    controller.passError.value = false;
-                    Get.to(() => BottomNavbar());
-                  }
+                  controller.login(context);
+                  // // Check if passwords match
+                  // if (controller.emailController.text.isEmpty) {
+                  //   controller.emailErrorText.value = "Enter your email";
+                  //   controller.emailError.value = true;
+                  //   // Show an error message to the user
+                  //   Get.snackbar(
+                  //     "Empty",
+                  //     "Enter your email",
+                  //     snackPosition: SnackPosition.TOP,
+                  //   );
+                  // } else if (controller.passwordController.text ==
+                  //     controller.confirmPasswordController.text) {
+                  //   controller.passErrorText.value = "Enter your password";
+                  //   controller.emailError.value = false;
+                  //   controller.passError.value = true;
+                  //   Get.snackbar(
+                  //     "Password empty",
+                  //     "Enter your password",
+                  //     snackPosition: SnackPosition.TOP,
+                  //   );
+                  // } else {
+                  //   controller.emailError.value = false;
+                  //   controller.passError.value = false;
+                  //   Get.to(() => BottomNavbar());
+                  // }
                 },
                 text: "Sign In",
               ),

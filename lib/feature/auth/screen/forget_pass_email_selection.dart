@@ -102,15 +102,16 @@ class ForgetPassEmailSelection extends StatelessWidget {
               Spacer(),
               AppButton(
                 onTap: () {
-                  if (controller.emailController.text.isEmpty) {
-                    Get.snackbar("Email empty", "Enter your email");
-                  } else {
-                    Get.to(
-                      () => ForgetPassOtpVerify(
-                        userEmail: controller.emailController.text.trim(),
-                      ),
-                    );
-                  }
+                  controller.sendOtp(context);
+                  // if (controller.emailController.text.isEmpty) {
+                  //   Get.snackbar("Email empty", "Enter your email");
+                  // } else {
+                  //   Get.to(
+                  //     () => ForgetPassOtpVerify(
+                  //       userEmail: controller.emailController.text.trim(),
+                  //     ),
+                  //   );
+                  // }
                 },
                 text: "Continue",
               ),

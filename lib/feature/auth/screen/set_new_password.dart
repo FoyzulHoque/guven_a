@@ -79,18 +79,19 @@ class SetNewPassword extends StatelessWidget {
                         const Spacer(),
                         AppButton(
                           onTap: () {
-                            // Check if passwords match
-                            if (controller.passwordController.text ==
-                                controller.confirmPasswordController.text) {
-                              Get.to(() => ResetPassConfirm());
-                            } else {
-                              // Show an error message to the user
-                              Get.snackbar(
-                                "Error",
-                                "Passwords do not match",
-                                snackPosition: SnackPosition.TOP,
-                              );
-                            }
+                            controller.setPassword(context);
+                            // // Check if passwords match
+                            // if (controller.passwordController.text ==
+                            //     controller.confirmPasswordController.text) {
+                            //   Get.to(() => ResetPassConfirm());
+                            // } else {
+                            //   // Show an error message to the user
+                            //   Get.snackbar(
+                            //     "Error",
+                            //     "Passwords do not match",
+                            //     snackPosition: SnackPosition.TOP,
+                            //   );
+                            // }
                           },
                           text: "save".tr,
                         ),

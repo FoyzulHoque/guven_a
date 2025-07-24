@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:guven_a/core/global_widegts/app_button.dart';
 import 'package:guven_a/core/global_widegts/app_button2.dart';
 import 'package:guven_a/core/global_widegts/custom_textfield.dart';
+import 'package:guven_a/core/services_class/local_service/shared_preferences_helper.dart';
 import 'package:guven_a/core/style/global_text_style.dart';
 import 'package:guven_a/feature/auth/screen/login_screen.dart';
 import 'package:guven_a/feature/capture_photo/controller/capture_photo_controller.dart';
@@ -136,7 +137,8 @@ class ProfileScreen extends StatelessWidget {
                   imageUrl: "assets/images/logout.png",
                   title: "Logout",
                   isIcon: false,
-                  onTap: () {
+                  onTap: () async {
+                    await SharedPreferencesHelper.clearAllData();
                     Get.to(() => LoginScreen());
                   },
                 ),
