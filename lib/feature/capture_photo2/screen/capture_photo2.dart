@@ -4,7 +4,14 @@ import 'package:get/get.dart';
 import 'package:guven_a/core/style/global_text_style.dart';
 import 'package:guven_a/feature/send_photo/screen/send_photo.dart';
 
+// Adjust path
+
 class CustomCameraScreen extends StatefulWidget {
+  final String postId; // This is correctly declared
+
+  // Add the constructor here to accept the postId
+  const CustomCameraScreen({Key? key, required this.postId}) : super(key: key);
+
   @override
   _CustomCameraScreenState createState() => _CustomCameraScreenState();
 }
@@ -35,19 +42,30 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
       });
     } else {
       print("No cameras available.");
+      // Handle case where no cameras are available, e.g., show an error message
+      Get.snackbar('Error', 'No cameras found on this device.');
     }
   }
 
   Future<void> _captureImage() async {
+    if (!_cameraController.value.isInitialized) {
+      Get.snackbar('Error', 'Camera not initialized. Please try again.');
+      return;
+    }
     try {
       final image = await _cameraController.takePicture();
       setState(() {
         imagePath = image.path;
       });
-      print("Captured image at: $imagePath");
-      Get.to(() => ImagePreviewScreen(imagePath: image.path));
+      print(
+        "Captured image for postId: ${widget.postId} at: $imagePath",
+      ); // Access postId here!
+      Get.to(
+        () => ImagePreviewScreen(imagePath: image.path, postId: widget.postId),
+      ); // Pass postId to next screen
     } catch (e) {
       print("Error capturing image: $e");
+      Get.snackbar('Error', 'Failed to capture image: $e');
     }
   }
 
@@ -76,7 +94,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
                         ),
                         SizedBox(width: 20),
                         Text(
-                          "Create request",
+                          "Create request", // Consider changing this to "Take Photo" or "Capture Evidence"
                           style: globalTextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -117,7 +135,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
                   ],
                 ),
               )
-            : Center(child: CircularProgressIndicator()),
+            : const Center(child: CircularProgressIndicator()), // Added const
       ),
     );
   }

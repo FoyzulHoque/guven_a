@@ -6,7 +6,11 @@ import 'package:guven_a/core/global_widegts/app_button.dart';
 import 'package:guven_a/feature/capture_photo2/screen/capture_photo2.dart';
 
 class CapturePhoto extends StatelessWidget {
-  const CapturePhoto({super.key});
+  // 1. Declare a final variable to store the ID
+  final String postId;
+
+  // 2. Add a constructor to accept the ID
+  const CapturePhoto({super.key, required this.postId});
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +47,14 @@ class CapturePhoto extends StatelessWidget {
               SizedBox(height: 5),
               // Subtitle text
               Text(
-                "Photos should be-fallen live, not from the library",
+                "Photos should be live, not from the library",
                 style: TextStyle(fontSize: 14, color: Colors.black87),
               ),
               Spacer(),
               AppButton(
                 onTap: () {
-                  Get.to(() => CustomCameraScreen());
+                  // You can now access postId here if needed for CustomCameraScreen
+                  Get.to(() => CustomCameraScreen(postId: postId));
                 },
                 text: "Take Photo",
               ),

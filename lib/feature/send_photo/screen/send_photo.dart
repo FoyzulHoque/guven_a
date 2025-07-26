@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guven_a/core/global_widegts/app_button.dart';
 import 'package:guven_a/core/style/global_text_style.dart';
+import 'package:guven_a/feature/my_response/controller/my_response_controller.dart';
 
 class ImagePreviewScreen extends StatelessWidget {
   final String imagePath;
+  final String postId;
 
   // Receive the image path as a parameter
-  ImagePreviewScreen({required this.imagePath});
-
+  ImagePreviewScreen({
+    super.key,
+    required this.imagePath,
+    required this.postId,
+  });
+  final MyResponseController controller = Get.find<MyResponseController>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -58,12 +64,8 @@ class ImagePreviewScreen extends StatelessWidget {
               ),
               Spacer(),
               AppButton(
-                onTap: () {
-                  Get.snackbar(
-                    "Success",
-                    "Image send successfully",
-                    backgroundColor: Colors.pinkAccent,
-                  );
+                onTap: () async {
+                  await controller.approvePost(postId, imagePath);
                 },
                 text: "Send",
               ),

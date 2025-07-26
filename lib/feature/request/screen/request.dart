@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_places_flutter/google_places_flutter.dart'
+    as google_places;
 import 'package:guven_a/core/global_widegts/app_button.dart';
 import 'package:guven_a/core/global_widegts/custom_textfield.dart';
 import 'package:guven_a/core/style/global_text_style.dart';
+import 'package:guven_a/feature/request/controller/place_search_controller.dart';
 import 'package:guven_a/feature/request/controller/request_controller.dart';
-import 'package:intl/intl.dart';
+
+import 'package:google_places_flutter/model/prediction.dart' as google_places;
 
 class RequestScreen extends StatelessWidget {
   RequestScreen({super.key});
 
   final RequestController controller = Get.put(RequestController());
+  final PlaceSearchController locationcontroller = Get.put(
+    PlaceSearchController(),
+  );
 
   @override
   Widget build(BuildContext context) {
-    Future<void> selectDate() async {
-      DateTime? _picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
-      );
-      if (_picked != null) {
-        String formattedDate = DateFormat('yyyy-MM-dd').format(_picked);
-        controller.datePickerController.text = formattedDate;
-      }
-    }
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -61,17 +55,88 @@ class RequestScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 20),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(
-                    "assets/images/map.png",
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
+                Container(
+                  child: Column(
+                    children: [
+                      // Search Input
+                      google_places.GooglePlaceAutoCompleteTextField(
+                        textEditingController: locationcontroller.controller,
+                        googleAPIKey:
+                            "AIzaSyATkpZxtsIVek6xHnGRsse_i4yVEofqQbI", // Replace with your actual API key
+                        inputDecoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          hintText: 'Search for places...',
+                          suffixIcon: Icon(Icons.search),
+                        ),
+                        debounceTime: 800,
+                        countries: [], // Restrict to Bangladesh
+                        isLatLngRequired: true,
+                        getPlaceDetailWithLatLng:
+                            (google_places.Prediction prediction) async {
+                              await locationcontroller.fetchPlaceDetails(
+                                prediction.placeId!,
+                              );
+                            },
+                        itemClick: (google_places.Prediction prediction) {
+                          locationcontroller.controller.text =
+                              prediction.description!;
+                          locationcontroller.controller.selection =
+                              TextSelection.fromPosition(
+                                TextPosition(
+                                  offset: prediction.description!.length,
+                                ),
+                              );
+                          locationcontroller.updatePlaceDetails(
+                            prediction.placeId!,
+                          );
+                        },
+
+                        itemBuilder:
+                            (
+                              context,
+                              index,
+                              google_places.Prediction prediction,
+                            ) {
+                              return ListTile(
+                                leading: Icon(Icons.location_on),
+                                title: Text("${prediction.description ?? ""}"),
+                              );
+                            },
+                        seperatedBuilder: Divider(),
+                        isCrossBtnShown: true,
+                      ),
+                      SizedBox(height: 10),
+
+                      // Detailed Information about the selected place
+                      Obx(() {
+                        if (locationcontroller.selectedPlace.value != null) {
+                          final place = locationcontroller.selectedPlace.value!;
+                          controller.lat.value =
+                              double.tryParse(place['lat'].toString()) ??
+                              0.0; // Parse as double
+                          controller.long.value =
+                              double.tryParse(place['lng'].toString()) ??
+                              0.0; // Parse as double
+                          controller.address.value = place['description'] ?? '';
+                          return SizedBox(); // Add a return statement
+                        } else {
+                          return SizedBox();
+                        }
+                      }),
+                    ],
                   ),
                 ),
-                SizedBox(height: 20),
+                // SizedBox(height: 20),
+                // ClipRRect(
+                //   borderRadius: BorderRadius.circular(15),
+                //   child: Image.asset(
+                //     "assets/images/map.png",
+                //     width: MediaQuery.of(context).size.width,
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
+                // SizedBox(height: 20),
                 CustomTextField(
                   title: "Address",
                   controller: controller.addressController,
@@ -112,7 +177,7 @@ class RequestScreen extends StatelessWidget {
                         controller: controller.datePickerController,
                         readOnly: true,
                         decoration: InputDecoration(
-                          suffixIcon: Icon(Icons.person),
+                          suffixIcon: Icon(Icons.calendar_month),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -124,7 +189,9 @@ class RequestScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        onTap: selectDate,
+                        onTap: () => controller.pickValidityDate(
+                          context,
+                        ), // <--- Call the controller's method
                       ),
                       SizedBox(height: 20),
                       Text(
@@ -171,7 +238,12 @@ class RequestScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 10),
-                      AppButton(onTap: () {}, text: "Create request"),
+                      AppButton(
+                        onTap: () {
+                          controller.submitRequest(context);
+                        },
+                        text: "Create request",
+                      ),
                     ],
                   ),
                 ),
