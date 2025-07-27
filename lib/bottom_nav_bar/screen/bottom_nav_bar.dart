@@ -15,7 +15,7 @@ class BottomNavbar extends StatelessWidget {
 
   final List<Widget> pages = [
     HomeScreen(),
-    MyRequestScreen(),
+    MyRequestsScreen(),
     RequestScreen(),
     MyResponse(),
     ProfileScreen(),
