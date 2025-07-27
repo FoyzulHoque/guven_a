@@ -52,59 +52,82 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 10),
-                Text(
-                  "adam.smith@yourdomain.com",
-                  style: globalTextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
+                // Display the fetched email here using Obx
+                Obx(() {
+                  if (controller.isLoadingEmail.value) {
+                    return Text(
+                      "Loading email...",
+                      style: globalTextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey,
+                      ),
+                    );
+                  } else if (controller.userEmail.isNotEmpty) {
+                    return Text(
+                      controller.userEmail.value,
+                      style: globalTextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    );
+                  } else {
+                    return Text(
+                      "Email not available",
+                      style: globalTextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.red, // Indicate an issue
+                      ),
+                    );
+                  }
+                }),
                 SizedBox(height: 10),
-                Divider(),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        "assets/images/visibility.png",
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          "Visibility",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Obx(() {
-                        return Switch(
-                          value: controller.isOnline.value,
-                          onChanged: controller.toggleStatus,
-                          activeColor: Color(0xFFD536AC),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
+                // Divider(),
+                // Container(
+                //   padding: EdgeInsets.all(16),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(10),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.grey.withOpacity(0.1),
+                //         spreadRadius: 1,
+                //         blurRadius: 8,
+                //         offset: Offset(0, 3),
+                //       ),
+                //     ],
+                //   ),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Image.asset(
+                //         "assets/images/visibility.png",
+                //         height: 50,
+                //         width: 50,
+                //         fit: BoxFit.cover,
+                //       ),
+                //       SizedBox(width: 16),
+                //       Expanded(
+                //         child: Text(
+                //           "Visibility",
+                //           style: TextStyle(
+                //             fontSize: 16,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ),
+                //       Obx(() {
+                //         return Switch(
+                //           value: controller.isOnline.value,
+                //           onChanged: controller.toggleStatus,
+                //           activeColor: Color(0xFFD536AC),
+                //         );
+                //       }),
+                //     ],
+                //   ),
+                // ),
                 Divider(),
                 StatusContainer(
                   imageUrl: "assets/images/notification2.png",
@@ -193,9 +216,9 @@ class ProfileScreen extends StatelessWidget {
                   Flexible(
                     child: AppButton2(
                       onTap: () {
-                        Navigator.pop(context);
+                        Get.back(); // Close the bottom sheet
                       },
-                      text: "Edit",
+                      text: "cancel",
                       textColor: Color(0xFfD536AC),
                       borderColor: Color(0xFFD536AC),
                     ),
@@ -204,8 +227,9 @@ class ProfileScreen extends StatelessWidget {
                   Flexible(
                     child: AppButton(
                       onTap: () {
-                        Get.snackbar("Deleted", "Account deleted successfully");
-                        Get.to(() => LoginScreen());
+                        controller.deleteAccount();
+                        // Get.snackbar("Deleted", "Account deleted successfully");
+                        // Get.to(() => LoginScreen());
                       },
                       text: "Delete",
                     ),
