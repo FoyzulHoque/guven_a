@@ -156,14 +156,14 @@ class RequestController extends GetxController {
             responseData["message"] ?? "Request submitted successfully!",
           );
           // Clear form fields after successful submission
-          addressController.clear();
-          detaildsController.clear();
-          datePickerController.clear();
-          lat.value = 0.0;
-          long.value = 0.0;
-          address.value = '';
-          selectedValidityDate.value = null;
-          selectedOption.value = 1; // Reset to default (Yes, urgent)
+          // addressController.clear();
+          // detaildsController.clear();
+          // datePickerController.clear();
+          // lat.value = 0.0;
+          // long.value = 0.0;
+          // address.value = '';
+          // selectedValidityDate.value = null;
+          // selectedOption.value = 1; // Reset to default (Yes, urgent)
 
           // Navigate to a confirmation screen or back to dashboard
           Get.offAll(() => BottomNavbar()); // Example navigation
@@ -204,12 +204,12 @@ class RequestController extends GetxController {
     }
   }
 
-  // Remember to dispose controllers
-  @override
-  void onClose() {
-    addressController.dispose();
-    detaildsController.dispose();
-    datePickerController.dispose();
-    super.onClose();
-  }
+  // // Remember to dispose controllers
+  // @override
+  // void onClose() {
+  //   addressController.dispose();
+  //   detaildsController.dispose();
+  //   datePickerController.dispose();
+  //   super.onClose();
+  // }
 }

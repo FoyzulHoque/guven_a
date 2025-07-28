@@ -25,12 +25,16 @@ enum RequestStatus {
 
 extension RequestStatusExtension on RequestStatus {
   String toApiString() {
-    return toString().split('.').last; // Converts enum to 'ACTIVE', 'ACCEPTED', etc.
+    return toString()
+        .split('.')
+        .last; // Converts enum to 'ACTIVE', 'ACCEPTED', etc.
   }
 }
+
 class MyRequestsController extends GetxController {
   // --- Tab Management ---
-  var currentTabIndex = 0.obs; // Reactive variable to hold the current tab index
+  var currentTabIndex =
+      0.obs; // Reactive variable to hold the current tab index
 
   // Method to change the selected tab index and trigger data fetch if needed
   void changeTab(int index) {
@@ -57,7 +61,8 @@ class MyRequestsController extends GetxController {
   };
 
   // Getter to provide read-only access to the list of requests for a given status.
-  RxList<ActiveRequest> getRequests(RequestStatus status) => _requestsMap[status]!;
+  RxList<ActiveRequest> getRequests(RequestStatus status) =>
+      _requestsMap[status]!;
 
   // Getter to provide read-only access to the loading state for a given status.
   RxBool isLoading(RequestStatus status) => _loadingMap[status]!;
@@ -83,7 +88,8 @@ class MyRequestsController extends GetxController {
         status = RequestStatus.ARCHIVED;
         break;
       default:
-        status = RequestStatus.ACTIVE; // Fallback to ACTIVE if index is unexpected
+        status =
+            RequestStatus.ACTIVE; // Fallback to ACTIVE if index is unexpected
     }
 
     // Only fetch if data for this tab hasn't been loaded yet OR if it's not currently loading.
@@ -103,16 +109,24 @@ class MyRequestsController extends GetxController {
     }
 
     isLoading(status).value = true; // Set loading state to true for this status
-    EasyLoading.show(status: 'Loading ${status.toApiString().toLowerCase()} requests...');
+    EasyLoading.show(
+      status: 'Loading ${status.toApiString().toLowerCase()} requests...',
+    );
 
     try {
-      final String statusString = status.toApiString(); // Convert enum to API string (e.g., "ACTIVE")
-      final url = Uri.parse('${Urls.baseUrl}/post/my-posts-req?status=$statusString');
-      final String? token = await SharedPreferencesHelper.getAccessToken(); // Retrieve auth token
+      final String statusString = status
+          .toApiString(); // Convert enum to API string (e.g., "ACTIVE")
+      final url = Uri.parse(
+        '${Urls.baseUrl}/post/my-posts-req?status=$statusString',
+      );
+      final String? token =
+          await SharedPreferencesHelper.getAccessToken(); // Retrieve auth token
 
       if (token == null || token.isEmpty) {
         EasyLoading.showError("Authentication token not found. Please log in.");
-        Get.offAll(() => LoginScreen()); // Redirect to login if token is missing
+        Get.offAll(
+          () => LoginScreen(),
+        ); // Redirect to login if token is missing
         return;
       }
 
@@ -126,23 +140,31 @@ class MyRequestsController extends GetxController {
 
       final Map<String, dynamic> responseData = json.decode(response.body);
       // Use ActiveRequestApiResponse as it's designed to parse the consistent structure
-      final ActiveRequestApiResponse apiResponse = ActiveRequestApiResponse.fromJson(responseData);
+      final ActiveRequestApiResponse apiResponse =
+          ActiveRequestApiResponse.fromJson(responseData);
 
       if (apiResponse.success) {
         // Update the specific RxList for this status with the fetched data
         getRequests(status).assignAll(apiResponse.data);
         EasyLoading.dismiss(); // Dismiss loading indicator on success
-        print("Successfully fetched ${getRequests(status).length} ${statusString} requests.");
+        print(
+          "Successfully fetched ${getRequests(status).length} ${statusString} requests.",
+        );
       } else {
         EasyLoading.showError(apiResponse.message); // Show API error message
         print("API Error (${statusString} Requests): ${apiResponse.message}");
       }
     } catch (e) {
-      EasyLoading.showError("Error fetching ${status.toApiString().toLowerCase()} requests: $e");
-      print("Error fetching ${status.toApiString().toLowerCase()} requests: $e");
+      EasyLoading.showError(
+        "Error fetching ${status.toApiString().toLowerCase()} requests: $e",
+      );
+      print(
+        "Error fetching ${status.toApiString().toLowerCase()} requests: $e",
+      );
     } finally {
       isLoading(status).value = false; // Set loading state to false
-      if (EasyLoading.isShow) EasyLoading.dismiss(); // Ensure loading indicator is dismissed
+      if (EasyLoading.isShow)
+        EasyLoading.dismiss(); // Ensure loading indicator is dismissed
     }
   }
 
@@ -151,5 +173,36 @@ class MyRequestsController extends GetxController {
     // Optionally clear existing data before refreshing if you want a blank slate during refresh
     // getRequests(status).clear();
     await fetchRequestsByStatus(status);
+  }
+
+  Future<void> archivePost(String postId) async {
+    EasyLoading.show(status: 'Rejecting...');
+    try {
+      final url = Uri.parse('${Urls.baseUrl}/post/archive/$postId');
+      final String? token = await SharedPreferencesHelper.getAccessToken();
+      if (token == null || token.isEmpty) {
+        EasyLoading.showError("Authentication token not found.");
+        return;
+      }
+      final response = await http.patch(
+        url,
+        headers: {'Content-Type': 'application/json', 'Authorization': token},
+      );
+
+      if (response.statusCode == 200) {
+        EasyLoading.showSuccess("Post rejected!");
+        fetchRequestsByStatus(RequestStatus.ACTIVE); // Refresh active posts
+        getRequests(
+          RequestStatus.ACTIVE,
+        ).removeWhere((post) => post.id == postId);
+      } else {
+        final errorData = json.decode(response.body);
+        EasyLoading.showError(errorData['message'] ?? "Failed to reject post.");
+      }
+    } catch (e) {
+      EasyLoading.showError("Error rejecting post: $e");
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 }

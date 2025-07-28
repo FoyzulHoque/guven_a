@@ -223,6 +223,7 @@ class _MyRequestsScreenState extends State<MyRequestsScreen>
                     child: AppButton(
                       onTap: () {
                         /* TODO: Handle Archive for Active */
+                        myRequestsController.archivePost(request.id);
                       },
                       text: "Archived",
                     ),
