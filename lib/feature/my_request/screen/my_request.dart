@@ -4,77 +4,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:guven_a/core/global_widegts/app_button.dart';
 import 'package:guven_a/core/global_widegts/app_button2.dart';
 import 'package:guven_a/core/style/global_text_style.dart';
+import 'package:guven_a/feature/accepted_request_details/screen/accepted_details.dart';
+import 'package:guven_a/feature/edit_request/screen/edit_request_screen.dart';
 import 'package:guven_a/feature/my_request/controller/my_request_controller.dart';
 import 'package:guven_a/feature/my_request/model/active_model.dart';
-import 'package:guven_a/feature/my_request/screen/widget/accept.dart';
-import 'package:guven_a/feature/my_request/screen/widget/active.dart';
-import 'package:guven_a/feature/my_request/screen/widget/archived.dart';
-
-// class MyRequestScreen extends StatelessWidget {
-//   final List<Tab> myTabs = <Tab>[
-//     Tab(text: 'Active'),
-//     Tab(text: 'Accepted'),
-//     Tab(text: 'Archived'),
-//   ];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: myTabs.length,
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         appBar: AppBar(
-//           backgroundColor: Colors.white,
-//           automaticallyImplyLeading: false,
-//           title: Row(
-//             children: [
-//               Image.asset(
-//                 'assets/images/logo2.png',
-//                 height: 35,
-//               ), // Replace with your logo
-//               SizedBox(width: 15),
-//               Text(
-//                 'My Requests',
-//                 style: globalTextStyle(
-//                   color: Colors.black,
-//                   fontSize: 25,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//             ],
-//           ),
-//           bottom: TabBar(
-//             labelColor: Color(0xFfD536AC),
-//             unselectedLabelColor: Colors.black,
-//             tabs: myTabs,
-//             indicatorColor: Color(0xFfD536AC),
-//             indicatorSize: TabBarIndicatorSize.tab,
-//           ),
-//           elevation: 0,
-//         ),
-//         body: TabBarView(
-//           children: [
-//             ActiveRequestScreen(),
-//             AcceptedRequestsWidget(),
-//             ArchivedRequestsWidget(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:guven_a/core/global_widegts/app_button.dart'; // Ensure correct paths for your widgets
-import 'package:guven_a/core/global_widegts/app_button2.dart';
-import 'package:guven_a/core/style/global_text_style.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:guven_a/core/global_widegts/app_button.dart';
-import 'package:guven_a/core/global_widegts/app_button2.dart';
-import 'package:guven_a/core/style/global_text_style.dart';
 
 class MyRequestsScreen extends StatefulWidget {
   const MyRequestsScreen({super.key});
@@ -211,6 +144,7 @@ class _MyRequestsScreenState extends State<MyRequestsScreen>
                     child: AppButton2(
                       onTap: () {
                         /* TODO: Handle Edit for Active */
+                        Get.to(EditRequestScreen(id: request.id));
                       },
                       text: "Edit",
                       borderColor: const Color(0xFFD536AC),
@@ -235,6 +169,8 @@ class _MyRequestsScreenState extends State<MyRequestsScreen>
                     child: AppButton(
                       onTap: () {
                         /* TODO: Handle Details for Accepted */
+                        print("Details for request: ${request.id}");
+                        Get.to(AcceptedDetails());
                       },
                       text: "Details",
                     ),
@@ -242,11 +178,18 @@ class _MyRequestsScreenState extends State<MyRequestsScreen>
                 ];
               } else if (status == RequestStatus.ARCHIVED) {
                 actionButtons = [
-                  Image.asset(
-                    "assets/images/edit_button.png",
-                    width: size.width * 0.7,
-                    height: 50,
-                  ),
+                  // Flexible(
+                  //   child: AppButton2(
+                  //     onTap: () {
+                  //       /* TODO: Handle Edit for Active */
+                  //       Get.to(EditRequestScreen(id: request.id));
+                  //     },
+                  //     text: "Edit",
+                  //     borderColor: const Color(0xFFD536AC),
+                  //     buttonColor: Colors.white,
+                  //     textColor: const Color(0xFFD536AC),
+                  //   ),
+                  // ),
                 ];
               } else {
                 actionButtons = [];

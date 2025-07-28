@@ -187,21 +187,21 @@ class LoginScreen extends StatelessWidget {
               ),
 
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
-                    child: CustomContainer(
-                      imageUrl: "assets/images/facebook.png",
-                      text: "Facebook",
-                      onTap: () {},
-                    ),
-                  ),
-                  SizedBox(width: 15),
-                  Flexible(
-                    child: CustomContainer(
-                      imageUrl: "assets/images/google.png",
-                      text: "Google",
-                      onTap: () {},
-                    ),
+                  // Flexible(
+                  //   child: CustomContainer(
+                  //     imageUrl: "assets/images/facebook.png",
+                  //     text: "Facebook",
+                  //     onTap: () {},
+                  //   ),
+                  // ),
+                  // SizedBox(width: 15),
+                  CustomContainer(
+                    imageUrl: "assets/images/google.png",
+                    text: "Google",
+                    onTap: () {},
                   ),
                 ],
               ),

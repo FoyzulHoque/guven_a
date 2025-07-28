@@ -39,8 +39,8 @@ class CardDetails extends StatelessWidget {
                     ? Image.network(
                         imageUrl,
                         width: MediaQuery.of(context).size.width,
-                        height: 250, // Give it a fixed height for better layout
-                        fit: BoxFit.cover,
+                        height: 600, // Give it a fixed height for better layout
+                        fit: BoxFit.contain,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
                           // Calculate progress for the CircularProgressIndicator
