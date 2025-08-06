@@ -1,16 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:guven_a/feature/notification/controller/pop_notification_controller.dart';
+import 'package:guven_a/firebase_options.dart';
 import 'package:guven_a/route/app_routes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'core/const/app_colors.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   configEasyLoading();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  Get.put(PopNotificationController());
   runApp(MyApp());
 }
 
