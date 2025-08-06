@@ -18,7 +18,7 @@ class PlaceSearchController extends GetxController {
     }
 
     final String searchUrl =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=AIzaSyCVJDP6zo30c6QBcYPdG7EZ1Dca1lGE2a0&location=23.685&radius=10000';
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=AIzaSyBsPxSFf2or6oZnbq7urgrxlakTiVqTmjQ&location=23.685&radius=10000';
     try {
       final response = await http.get(Uri.parse(searchUrl));
       if (response.statusCode == 200) {
@@ -43,7 +43,7 @@ class PlaceSearchController extends GetxController {
     isLoading.value = true;
 
     final String detailsUrl =
-        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyCVJDP6zo30c6QBcYPdG7EZ1Dca1lGE2a0';
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBsPxSFf2or6oZnbq7urgrxlakTiVqTmjQ';
     try {
       final response = await http.get(Uri.parse(detailsUrl));
       if (response.statusCode == 200) {
