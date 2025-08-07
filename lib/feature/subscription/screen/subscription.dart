@@ -7,57 +7,52 @@ class SubscriptionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                'Share more photos with FrizzMe Premium!',
-                style: globalTextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 10),
+            Text(
+              'Share more photos with FrizzMe Premium!',
+              style: globalTextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Unlock unlimited sharing and extra features.',
+              style: globalTextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            // Horizontal Scrollable Subscription Options
+            SizedBox(
+              height: 150,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  _buildSubscriptionCard('10 Credits price', '€4.99'),
+                  const SizedBox(width: 16),
+                  _buildSubscriptionCard('25 Credits', '€9.99'),
+                  const SizedBox(width: 16),
+                  _buildSubscriptionCard('50 Credits', '€14.99'),
+                ],
               ),
-              SizedBox(height: 8),
-              Text(
-                'Unlock unlimited sharing and extra features.',
-                style: globalTextStyle(fontSize: 16, color: Colors.grey),
-                textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 40),
+            Text(
+              'Unlock all features',
+              style: globalTextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-              const SizedBox(height: 20),
-              // Horizontal Scrollable Subscription Options
-              SizedBox(
-                height: 150,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildSubscriptionCard('10 Credits price', '€4.99'),
-                    const SizedBox(width: 16),
-                    _buildSubscriptionCard('25 Credits', '€9.99'),
-                    const SizedBox(width: 16),
-                    _buildSubscriptionCard('50 Credits', '€14.99'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 40),
-              Text(
-                'Unlock all features',
-                style: globalTextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildFeatureList(),
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            _buildFeatureList(),
+          ],
         ),
       ),
     );
