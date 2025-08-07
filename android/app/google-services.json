@@ -12,7 +12,20 @@
           "package_name": "com.example.guven_a"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "854015954290-k5pgfbd7jlqmeh43mbo78gke5h9v0tr4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.guven_a",
+            "certificate_hash": "e76ae0ddebf368a87e8908ec97e9b9ab7df23ee7"
+          }
+        },
+        {
+          "client_id": "854015954290-fss90513esd22gmo224p6cf3v7mt3h3v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAcVonAXRxtNcShQglMuGGbfnJxWophnJ0"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854015954290-fss90513esd22gmo224p6cf3v7mt3h3v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "854015954290-l092rqt7b679jnd9vll6s2ncc1sov4ll.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.guvena"
+              }
+            }
+          ]
         }
       }
     }

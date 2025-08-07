@@ -64,6 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '854015954290',
     projectId: 'fizz-me',
     storageBucket: 'fizz-me.firebasestorage.app',
+    androidClientId: '854015954290-k5pgfbd7jlqmeh43mbo78gke5h9v0tr4.apps.googleusercontent.com',
+    iosClientId: '854015954290-l092rqt7b679jnd9vll6s2ncc1sov4ll.apps.googleusercontent.com',
     iosBundleId: 'com.example.guvena',
   );
 
@@ -73,6 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '854015954290',
     projectId: 'fizz-me',
     storageBucket: 'fizz-me.firebasestorage.app',
+    androidClientId: '854015954290-k5pgfbd7jlqmeh43mbo78gke5h9v0tr4.apps.googleusercontent.com',
+    iosClientId: '854015954290-l092rqt7b679jnd9vll6s2ncc1sov4ll.apps.googleusercontent.com',
     iosBundleId: 'com.example.guvena',
   );
 
@@ -85,4 +89,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'fizz-me.firebasestorage.app',
     measurementId: 'G-MQMWTJ2YC1',
   );
+
 }

@@ -183,7 +183,9 @@ class RegisterScreen extends StatelessWidget {
                   CustomContainer(
                     imageUrl: "assets/images/google.png",
                     text: "Google",
-                    onTap: () {},
+                    onTap: () async {
+                      await controller.signUpWithGoogle(context);
+                    },
                   ),
                 ],
               ),

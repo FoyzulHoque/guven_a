@@ -10,10 +10,17 @@ class SubscriptionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 40),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 80),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
             SizedBox(height: 10),
             Text(
               'Share more photos with FrizzMe Premium!',

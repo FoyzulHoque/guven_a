@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:guven_a/bottom_nav_bar/screen/bottom_nav_bar.dart';
 import 'package:guven_a/core/global_widegts/coustom_dialouge.dart';
 import 'package:guven_a/core/network_caller/endpoints.dart';
@@ -11,20 +15,17 @@ import 'package:guven_a/core/services_class/local_service/shared_preferences_hel
 import 'package:http/http.dart' as http;
 
 class RegisterController extends GetxController {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   RxBool isPasswordVisible = false.obs;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  var isGoogle = false.obs;
   var emailError = false.obs;
   var passError = false.obs;
   var emailErrorText = "".obs;
   var passErrorText = "".obs;
   var isRememberMeChecked = false.obs;
-
-  void toggleRememberMe(bool value) {
-    isRememberMeChecked.value = value;
-  }
-
   RxString otp = ''.obs;
 
   // Set OTP value
@@ -35,6 +36,12 @@ class RegisterController extends GetxController {
     }
   }
 
+  // Toggle remember me option
+  void toggleRememberMe(bool value) {
+    isRememberMeChecked.value = value;
+  }
+
+  // Validate and create account
   Future<void> createAccount() async {
     String email = emailController.text.trim();
     RegExp emailRegex = RegExp(
@@ -51,18 +58,20 @@ class RegisterController extends GetxController {
     }
 
     final url = Uri.parse('${Urls.baseUrl}/users/register');
+    String? fcmToken;
 
-    //String? fcmToken;
-    // try {
-    //   fcmToken = await FirebaseMessaging.instance.getToken();
-    //   if (kDebugMode) debugPrint("FCM Token: $fcmToken");
-    // } catch (e) {
-    //   if (kDebugMode) debugPrint("Error fetching FCM token: $e");
-    //   fcmToken = null;
-    // }
+    // Fetch FCM Token
+    try {
+      fcmToken = await FirebaseMessaging.instance.getToken();
+      if (kDebugMode) debugPrint("FCM Token: $fcmToken");
+    } catch (e) {
+      if (kDebugMode) debugPrint("Error fetching FCM token: $e");
+      fcmToken = null;
+    }
 
-    //final String tokenToSend = fcmToken ?? "";
+    final String tokenToSend = fcmToken ?? "";
 
+    // Register account via API
     try {
       EasyLoading.show(status: 'Creating account...');
 
@@ -72,7 +81,7 @@ class RegisterController extends GetxController {
         body: jsonEncode({
           "email": email,
           "password": passwordController.text,
-          //"fcmToken": tokenToSend,
+          "fcmToken": tokenToSend,
         }),
       );
 
@@ -83,26 +92,25 @@ class RegisterController extends GetxController {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-        // Check if the API response indicates success and contains data
+        // Handle response success
         if (responseData['success'] == true && responseData['data'] != null) {
           final Map<String, dynamic> data = responseData['data'];
           final String? token = data['token'];
 
           if (token != null && token.isNotEmpty) {
-            // Save the token using SharedPreferencesHelper
+            // Save token using SharedPreferencesHelper
             await SharedPreferencesHelper.saveToken(token);
             EasyLoading.showSuccess("Account created successfully!");
 
-            // Now you can navigate to the OTP screen or home screen
+            // Navigate to the OTP screen or home screen
             Get.to(() => BottomNavbar());
           } else {
             EasyLoading.showError("Token not found in response.");
           }
         } else {
-          // Handle API success: false or missing data
-          final String message =
-              responseData['message'] ?? 'Registration failed.';
-          EasyLoading.showError(message);
+          EasyLoading.showError(
+            responseData['message'] ?? 'Registration failed.',
+          );
         }
       } else {
         // Handle non-200 status codes
@@ -111,128 +119,97 @@ class RegisterController extends GetxController {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
           errorMessage = errorData['message'] ?? errorMessage;
         } catch (e) {
-          // If response body is not valid JSON, use generic message
           if (kDebugMode) debugPrint("Failed to parse error response: $e");
         }
         EasyLoading.showError(errorMessage);
       }
     } catch (e) {
       EasyLoading.showError("An unexpected error occurred. Please try again.");
-      if (kDebugMode) {
-        debugPrint("Exception during account creation: $e");
-      }
+      if (kDebugMode) debugPrint("Exception during account creation: $e");
     } finally {
       EasyLoading.dismiss();
     }
   }
 
-  // Future<void> verifyOtp(BuildContext context) async {
-  //   final url = Uri.parse('${Urls.baseUrl}/auth/verify-otp');
+  // Sign up with Google
+  Future<void> signUpWithGoogle(BuildContext context) async {
+    try {
+      isGoogle.value = true;
 
-  //   try {
-  //     EasyLoading.show(status: 'Logging in...');
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+      if (gUser == null) return; // User canceled the login
 
-  //     final response = await http.post(
-  //       url,
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode({
-  //         "email": emailController.text.trim(),
-  //         "otp": int.parse(otp.value),
-  //       }),
-  //     );
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
 
-  //     if (kDebugMode) {
-  //       print("Response: ${response.body}");
-  //     }
+      UserCredential userCredential = await _firebaseAuth.signInWithCredential(
+        credential,
+      );
 
-  //     if (response.statusCode == 200) {
-  //       EasyLoading.showSuccess("successfully ");
-  //       final responseData = jsonDecode(response.body);
+      if (userCredential.user != null) {
+        String fullName = userCredential.user!.displayName ?? "Unknown";
+        String email = userCredential.user!.email ?? "No Email";
 
-  //       if (responseData["success"] == true) {
-  //         if (responseData["data"] != null) {
-  //           String token = responseData["data"]["token"] ?? "";
+        // Fetch FCM Token
+        String? fcmToken = await FirebaseMessaging.instance.getToken();
+        if (fcmToken == null) {
+          debugPrint("FCM token is null");
+          return;
+        }
 
-  //           if (token.isNotEmpty) {
-  //             await SharedPreferencesHelper.saveToken(token);
-  //             EasyLoading.showSuccess("Registration success");
-  //             // Get.offAll(() => UserType());
-  //           } else {
-  //             EasyLoading.showError("Token is missing in response.");
-  //           }
-  //         } else {
-  //           EasyLoading.showError("Invalid response: 'data' is null.");
-  //         }
-  //       } else {
-  //         EasyLoading.showError(responseData["message"] ?? "Login failed.");
-  //       }
-  //     } else {
-  //       EasyLoading.showError("An error occurred: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     showCustomDialog(
-  //       // ignore: use_build_context_synchronously
-  //       context: context,
-  //       icon: Icons.close,
-  //       iconColor: Colors.red,
-  //       title: "Error",
-  //       message: "An error occurred. Please try again.",
-  //       buttonText: "Ok, Got it!",
-  //       onButtonPressed: () {
-  //         Navigator.pop(context);
-  //       },
-  //     );
-  //     //EasyLoading.showError('An error occurred. Please try again.');
-  //     if (kDebugMode) {
-  //       print(e.toString());
-  //     }
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
+        await socialSignUpApiCall(fullName, email, fcmToken);
+      }
+    } catch (e) {
+      debugPrint("❌ Google Sign-In Error: $e");
+    } finally {
+      isGoogle.value = false;
+    }
+  }
 
-  // Future<void> resendOtp(BuildContext context) async {
-  //   final url = Uri.parse('${Urls.baseUrl}/auth/forgot-password');
+  // Social sign-up API call
+  Future<void> socialSignUpApiCall(
+    String fullName,
+    String email,
+    String fcmToken,
+  ) async {
+    try {
+      Map<String, String> requestBody = {
+        'fullName': fullName,
+        'email': email,
+        'fcmToken': fcmToken,
+      };
 
-  //   try {
-  //     EasyLoading.show(status: 'Logging in...');
+      final response = await http.post(
+        Uri.parse("${Urls.baseUrl}/users/social-sign-up"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(requestBody),
+      );
 
-  //     final response = await http.post(
-  //       url,
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode({"email": emailController.text.trim()}),
-  //     );
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        if (responseData['success'] == true && responseData['data'] != null) {
+          final Map<String, dynamic> data = responseData['data'];
+          final String? token = data['token'];
 
-  //     if (kDebugMode) {
-  //       print("Response: ${response.body}");
-  //     }
-
-  //     if (response.statusCode == 200) {
-  //       //final responseData = jsonDecode(response.body);
-
-  //       EasyLoading.showSuccess("successfully sent");
-  //     } else {
-  //       EasyLoading.showError("An error occurred: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     showCustomDialog(
-  //       // ignore: use_build_context_synchronously
-  //       context: context,
-  //       icon: Icons.close,
-  //       iconColor: Colors.red,
-  //       title: "Error",
-  //       message: "An error occurred. Please try again.",
-  //       buttonText: "Ok, Got it!",
-  //       onButtonPressed: () {
-  //         Navigator.pop(context);
-  //       },
-  //     );
-  //     //EasyLoading.showError('An error occurred. Please try again.');
-  //     if (kDebugMode) {
-  //       print(e.toString());
-  //     }
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
+          // Save the token and navigate
+          if (token != null && token.isNotEmpty) {
+            await SharedPreferencesHelper.saveToken(token);
+            EasyLoading.showSuccess("Account created successfully!");
+            Get.offAll(BottomNavbar());
+          } else {
+            EasyLoading.showError("Token not found.");
+          }
+        } else {
+          EasyLoading.showError(responseData['message'] ?? 'Sign-Up failed.');
+        }
+      } else {
+        EasyLoading.showError("Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      EasyLoading.showError("An error occurred: $e");
+    }
+  }
 }

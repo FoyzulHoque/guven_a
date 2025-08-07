@@ -15,7 +15,8 @@ class CustomContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () => onTap,
+      onTap: onTap,
+
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         height: 60,

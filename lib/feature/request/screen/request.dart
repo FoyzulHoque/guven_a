@@ -64,7 +64,7 @@ import 'package:google_places_flutter/model/prediction.dart' as google_places;
 //                       google_places.GooglePlaceAutoCompleteTextField(
 //                         textEditingController: locationcontroller.controller,
 //                         googleAPIKey:
-//                             "AIzaSyBsPxSFf2or6oZnbq7urgrxlakTiVqTmjQ", // Replace with your actual API key
+//                             "AIzaSyCVJDP6zo30c6QBcYPdG7EZ1Dca1lGE2a0", // Replace with your actual API key
 //                         inputDecoration: InputDecoration(
 //                           contentPadding: EdgeInsets.all(10),
 //                           hintText: 'Search for places...',
@@ -256,17 +256,27 @@ import 'package:google_places_flutter/model/prediction.dart' as google_places;
 //     );
 //   }
 // }
-class RequestScreen extends StatelessWidget {
+
+class RequestScreen extends StatefulWidget {
   RequestScreen({super.key});
 
+  @override
+  _RequestScreenState createState() => _RequestScreenState();
+}
+
+class _RequestScreenState extends State<RequestScreen> {
   final RequestController controller = Get.put(RequestController());
-  final PlaceSearchController locationcontroller = Get.put(
-    PlaceSearchController(),
-  );
 
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
   LatLng _center = LatLng(23.8103, 90.4125); // Default location (e.g., Dhaka)
+
+  @override
+  void initState() {
+    super.initState();
+    // Add initial marker at the center
+    _addMarker(_center);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +300,7 @@ class RequestScreen extends StatelessWidget {
                     SizedBox(width: 20),
                     Text(
                       "Create request",
-                      style: globalTextStyle(
+                      style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -307,38 +317,6 @@ class RequestScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
 
-                // Google Places Search
-                google_places.GooglePlaceAutoCompleteTextField(
-                  textEditingController: locationcontroller.controller,
-                  googleAPIKey:
-                      "AIzaSyBsPxSFf2or6oZnbq7urgrxlakTiVqTmjQ", // Replace with your actual API key
-                  inputDecoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(10),
-                    hintText: 'Search for places...',
-                    suffixIcon: Icon(Icons.search),
-                  ),
-                  debounceTime: 800,
-                  countries: [],
-                  isLatLngRequired: true,
-                  getPlaceDetailWithLatLng:
-                      (google_places.Prediction prediction) async {
-                        await locationcontroller.fetchPlaceDetails(
-                          prediction.placeId!,
-                        );
-                      },
-                  itemClick: (google_places.Prediction prediction) {
-                    locationcontroller.controller.text =
-                        prediction.description!;
-                    locationcontroller.controller.selection =
-                        TextSelection.fromPosition(
-                          TextPosition(offset: prediction.description!.length),
-                        );
-                    locationcontroller.updatePlaceDetails(prediction.placeId!);
-                  },
-                ),
-
-                SizedBox(height: 10),
-
                 // Map with draggable marker
                 Container(
                   height: 300,
@@ -351,11 +329,21 @@ class RequestScreen extends StatelessWidget {
                       zoom: 12,
                     ),
                     markers: _markers,
+                    onCameraMove: (CameraPosition position) {
+                      // As the camera moves, update the marker to stay at the center
+                      if (_markers.isNotEmpty) {
+                        _markers.clear();
+                        _addMarker(
+                          position.target,
+                        ); // Move the marker to new camera position
+                      }
+                    },
                     onTap: (LatLng latLng) {
+                      // Optionally, allow the user to place a marker by tapping
                       _addMarker(latLng);
                     },
-                    onCameraMove: (CameraPosition position) {
-                      // Update map's camera position
+                    onCameraIdle: () {
+                      // Optionally, you can perform actions when the camera stops moving
                     },
                   ),
                 ),
@@ -371,7 +359,99 @@ class RequestScreen extends StatelessWidget {
                   controller: controller.detaildsController,
                   maxLine: 4,
                 ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Validity date",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: 3),
+                          Text(
+                            "*",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      TextField(
+                        controller: controller.datePickerController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(Icons.calendar_month),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFfD536AC),
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        onTap: () => controller.pickValidityDate(
+                          context,
+                        ), // <--- Call the controller's method
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        "Urgency",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            // Radio Button 1
+                            Row(
+                              children: [
+                                Radio<int>(
+                                  value: 1,
+                                  groupValue: controller.selectedOption.value,
+                                  activeColor: Color(0xFfD536AC),
+                                  onChanged: (value) {
+                                    controller.selectedOption.value = value!;
+                                  },
+                                ),
+                                Text("Yes"),
+                              ],
+                            ),
 
+                            Row(
+                              children: [
+                                Radio<int>(
+                                  value: 2,
+                                  activeColor: Color(0xFfD536AC),
+                                  groupValue: controller.selectedOption.value,
+                                  onChanged: (value) {
+                                    controller.selectedOption.value = value!;
+                                  },
+                                ),
+                                Text("No"),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 // Submit button
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
@@ -390,20 +470,26 @@ class RequestScreen extends StatelessWidget {
     );
   }
 
+  // Method to add a marker and move the camera to the marker's position
   void _addMarker(LatLng position) {
-    _markers.clear(); // Remove old markers
+    // Clear existing markers and add a new one
+    _markers.clear();
     _markers.add(
       Marker(
         markerId: MarkerId("selected_location"),
         position: position,
         draggable: true,
         onDragEnd: (newPosition) {
-          // Update the lat/long values
+          // Update the lat/long values when the marker is dragged
           controller.lat.value = newPosition.latitude;
           controller.long.value = newPosition.longitude;
+
+          // Update the camera position to the new position
+          _mapController?.animateCamera(CameraUpdate.newLatLng(newPosition));
         },
       ),
     );
+    // Update the camera to the new position after adding the marker
     _mapController?.animateCamera(CameraUpdate.newLatLng(position));
   }
 }
