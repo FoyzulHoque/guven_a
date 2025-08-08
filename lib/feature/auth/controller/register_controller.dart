@@ -183,7 +183,7 @@ class RegisterController extends GetxController {
       };
 
       final response = await http.post(
-        Uri.parse("${Urls.baseUrl}/users/social-sign-up"),
+        Uri.parse("${Urls.baseUrl}/auth/social-SignUp"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(requestBody),
       );

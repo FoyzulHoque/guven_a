@@ -208,7 +208,7 @@ class LoginController extends GetxController {
 
       // Make the API request
       final response = await http.post(
-        Uri.parse("${Urls.baseUrl}/users/social-sign-in"),
+        Uri.parse("${Urls.baseUrl}/auth/social-SignUp"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(requestBody),
       );
