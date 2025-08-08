@@ -8,7 +8,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guven_a/bottom_nav_bar/screen/bottom_nav_bar.dart';
-
 import 'package:http/http.dart' as http;
 
 import '../../../core/global_widegts/coustom_dialouge.dart';
