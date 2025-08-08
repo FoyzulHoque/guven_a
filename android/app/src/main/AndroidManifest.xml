@@ -8,7 +8,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="true"/>
 
     <application
-        android:label="guven_a"
+        android:label="Fizz me"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         

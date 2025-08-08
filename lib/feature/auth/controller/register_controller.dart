@@ -152,7 +152,7 @@ class RegisterController extends GetxController {
       if (userCredential.user != null) {
         String fullName = userCredential.user!.displayName ?? "Unknown";
         String email = userCredential.user!.email ?? "No Email";
-
+        print("Google Sign-In successful: $fullName, $email");
         // Fetch FCM Token
         String? fcmToken = await FirebaseMessaging.instance.getToken();
         if (fcmToken == null) {

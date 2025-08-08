@@ -59,6 +59,7 @@ dependencies:
   flutter_local_notifications: ^19.4.0
   google_sign_in: ^6.2.2
   firebase_auth: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
 
@@ -73,6 +74,13 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/fizzme.jpeg"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icons/fizzme.jpeg"
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
